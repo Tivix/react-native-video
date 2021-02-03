@@ -70,6 +70,7 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultLoadErrorHandlingPolicy;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Util;
 
@@ -412,25 +413,15 @@ class ReactExoplayerView extends FrameLayout implements
                     DefaultRenderersFactory renderersFactory =
                             new DefaultRenderersFactory(getContext())
                                     .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-                    // DRM
-                    @Nullable DrmSessionManager drmSessionManager = null;
-                    if (self.drmUUID != null) {
-                        try {
-                            drmSessionManager = buildDrmSessionManager(self.drmUUID, self.drmLicenseUrl,
-                                    self.drmLicenseHeader);
-                        } catch (UnsupportedDrmException e) {
-                            int errorStringId = Util.SDK_INT < 18 ? R.string.error_drm_not_supported
-                                    : (e.reason == UnsupportedDrmException.REASON_UNSUPPORTED_SCHEME
-                                    ? R.string.error_drm_unsupported_scheme : R.string.error_drm_unknown);
-                            eventEmitter.error(getResources().getString(errorStringId), e);
-                            return;
-                        }
-                    }
-                    // End DRM
-                    //player = new SimpleExoPlayer.Builder(getContext(), renderersFactory, trackSelector,
+
+                    player = new SimpleExoPlayer.Builder(getContext(), renderersFactory)
+                            .setTrackSelector(trackSelector)
+                            .setLoadControl(defaultLoadControl)
+                            .setBandwidthMeter(bandwidthMeter)
+                            .build();
                             //null, defaultLoadControl, bandwidthMeter, null).build();
-                    player = ExoPlayerFactory.newSimpleInstance(getContext(), renderersFactory,
-                            trackSelector, defaultLoadControl, bandwidthMeter);
+                    //player = ExoPlayerFactory.newSimpleInstance(getContext(), renderersFactory,
+                            //trackSelector, defaultLoadControl, bandwidthMeter);
                     player.addListener(self);
                     player.addMetadataOutput(self);
                     exoPlayerView.setPlayer(player);
@@ -490,11 +481,29 @@ class ReactExoplayerView extends FrameLayout implements
                         keyRequestPropertiesArray[i + 1]);
             }
         }
-        return new DefaultDrmSessionManager(uuid,
-                FrameworkMediaDrm.newInstance(uuid), drmCallback, null, false, 3);
+        return new DefaultDrmSessionManager.Builder()
+                .setUuidAndExoMediaDrmProvider(uuid, FrameworkMediaDrm.DEFAULT_PROVIDER)
+                .setMultiSession(false)
+                .setLoadErrorHandlingPolicy(new DefaultLoadErrorHandlingPolicy(3))
+                .build(drmCallback);
     }
 
     private MediaSource buildMediaSource(Uri uri, String overrideExtension) {
+        // DRM
+        DrmSessionManager drmSessionManager = null;
+        if (drmUUID != null) {
+            try {
+                drmSessionManager = buildDrmSessionManager(drmUUID, drmLicenseUrl,
+                        drmLicenseHeader);
+            } catch (UnsupportedDrmException e) {
+                int errorStringId = Util.SDK_INT < 18 ? R.string.error_drm_not_supported
+                        : (e.reason == UnsupportedDrmException.REASON_UNSUPPORTED_SCHEME
+                        ? R.string.error_drm_unsupported_scheme : R.string.error_drm_unknown);
+                eventEmitter.error(getResources().getString(errorStringId), e);
+                throw new IllegalStateException("Unsupported type: " + e);
+            }
+        }
+        // End DRM
         int type = Util.inferContentType(!TextUtils.isEmpty(overrideExtension) ? "." + overrideExtension
                 : uri.getLastPathSegment());
         switch (type) {
@@ -504,6 +513,8 @@ class ReactExoplayerView extends FrameLayout implements
                         buildDataSourceFactory(false)
                 ).setLoadErrorHandlingPolicy(
                         config.buildLoadErrorHandlingPolicy(minLoadRetryCount)
+                ).setDrmSessionManager(
+                      drmSessionManager
                 ).createMediaSource(uri);
             case C.TYPE_DASH:
                 return new DashMediaSource.Factory(
@@ -511,18 +522,24 @@ class ReactExoplayerView extends FrameLayout implements
                         buildDataSourceFactory(false)
                 ).setLoadErrorHandlingPolicy(
                         config.buildLoadErrorHandlingPolicy(minLoadRetryCount)
+                ).setDrmSessionManager(
+                        drmSessionManager
                 ).createMediaSource(uri);
             case C.TYPE_HLS:
                 return new HlsMediaSource.Factory(
                         mediaDataSourceFactory
                 ).setLoadErrorHandlingPolicy(
                         config.buildLoadErrorHandlingPolicy(minLoadRetryCount)
+                ).setDrmSessionManager(
+                        drmSessionManager
                 ).createMediaSource(uri);
             case C.TYPE_OTHER:
                 return new ProgressiveMediaSource.Factory(
                         mediaDataSourceFactory
                 ).setLoadErrorHandlingPolicy(
                         config.buildLoadErrorHandlingPolicy(minLoadRetryCount)
+                ).setDrmSessionManager(
+                        drmSessionManager
                 ).createMediaSource(uri);
             default: {
                 throw new IllegalStateException("Unsupported type: " + type);
