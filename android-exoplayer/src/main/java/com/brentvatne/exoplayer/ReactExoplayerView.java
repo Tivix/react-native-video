@@ -419,9 +419,6 @@ class ReactExoplayerView extends FrameLayout implements
                             .setLoadControl(defaultLoadControl)
                             .setBandwidthMeter(bandwidthMeter)
                             .build();
-                            //null, defaultLoadControl, bandwidthMeter, null).build();
-                    //player = ExoPlayerFactory.newSimpleInstance(getContext(), renderersFactory,
-                            //trackSelector, defaultLoadControl, bandwidthMeter);
                     player.addListener(self);
                     player.addMetadataOutput(self);
                     exoPlayerView.setPlayer(player);
