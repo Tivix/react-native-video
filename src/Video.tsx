@@ -1,28 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, requireNativeComponent, NativeModules, View, ViewPropTypes, Image, Platform, findNodeHandle } from 'react-native';
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
-import TextTrackType from './TextTrackType';
-import FilterType from './FilterType';
-import DRMType from './DRMType';
-import VideoResizeMode from './VideoResizeMode.js';
-import {VideoProps} from './types';
-import {toTypeString, stringsOnlyObject} from './helpers';
+import { StyleSheet, requireNativeComponent, NativeModules, View, Image, Platform, findNodeHandle } from 'react-native';
+import { VideoProps, VideoResizeMode } from './types.d';
+import { stringsOnlyObject } from './helpers';
 
 export default function Video(props: VideoProps) {
   const video = useRef(null);
-  const [showPoster, setShowPoster] = useState<boolean>(props.poster)
-
-  const hidePoster = () => setShowPoster(false);
-
-  const onVideoLoad = (event) => {
-    // Need to hide poster here for windows as onReadyForDisplay is not implemented
-    if (Platform.OS === 'windows') {
-      hidePoster();
-    }
-    if (props.onLoad) {
-      props.onLoad(event.nativeEvent);
-    }
-  };
 
   const onGetLicense = (event) => {
     if (props.drm && props.drm.getLicense instanceof Function) {
@@ -51,8 +33,7 @@ export default function Video(props: VideoProps) {
     return NativeModules.UIManager.getViewManagerConfig(viewManagerName);
   };
 
-    const resizeMode = props.resizeMode;
-    const source = resolveAssetSource(props.source) || {};
+    const source = Image.resolveAssetSource(props.source) || {} as ImageResolvedAssetSource;
     const shouldCache = !source.__packager_asset;
 
     let uri = source.uri || '';
@@ -70,11 +51,11 @@ export default function Video(props: VideoProps) {
     let nativeResizeMode;
     const RCTVideoInstance = getViewManagerConfig('RCTVideo');
 
-    if (resizeMode === VideoResizeMode.stretch) {
+    if (props.resizeMode === VideoResizeMode.stretch) {
       nativeResizeMode = RCTVideoInstance.Constants.ScaleToFill;
-    } else if (resizeMode === VideoResizeMode.contain) {
+    } else if (props.resizeMode === VideoResizeMode.contain) {
       nativeResizeMode = RCTVideoInstance.Constants.ScaleAspectFit;
-    } else if (resizeMode === VideoResizeMode.cover) {
+    } else if (props.resizeMode === VideoResizeMode.cover) {
       nativeResizeMode = RCTVideoInstance.Constants.ScaleAspectFill;
     } else {
       nativeResizeMode = RCTVideoInstance.Constants.ScaleNone;
@@ -93,7 +74,6 @@ export default function Video(props: VideoProps) {
         mainVer: source.mainVer || 0,
         patchVer: source.patchVer || 0,
         requestHeaders: source.headers ? stringsOnlyObject(source.headers) : {},
-        onVideoLoad,
       },
       onGetLicense: props.drm && props.drm.getLicense && onGetLicense,
     }
@@ -110,7 +90,7 @@ export default function Video(props: VideoProps) {
           {...nativeProps}
           style={StyleSheet.absoluteFill}
         />
-        {showPoster && (
+        {props.poster && (
           <Image style={posterStyle} source={{ uri: props.poster }} />
         )}
       </View>
@@ -123,10 +103,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const RCTVideo = requireNativeComponent('RCTVideo', Video, {
-  nativeOnly: {
-    src: true,
-    seek: true,
-    fullscreen: true,
-  },
-});
+const RCTVideo = requireNativeComponent('RCTVideo');

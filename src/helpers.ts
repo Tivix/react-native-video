@@ -1,4 +1,4 @@
-export function toTypeString(x: any) {
+export function toTypeString(x: any): string {
   switch (typeof x) {
     case 'object':
       return x instanceof Date
