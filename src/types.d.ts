@@ -7,6 +7,79 @@ export enum DRMType {
   FAIRPLAY = 'fairplay'
 }
 
+export enum TextTrackType {
+  SRT = 'application/x-subrip',
+  TTML = 'application/ttml+xml',
+  VTT = 'text/vtt',
+}
+
+export enum VideoResizeMode {
+  CONTAIN = 'contain',
+  COVER = 'cover',
+  STRETCH = 'stretch',
+}
+
+export interface OnSeekData {
+  currentTime: number;
+  seekTime: number;
+  target?: number;
+}
+
+export interface OnLoadData {
+  canPlayFastForward: boolean;
+  canPlayReverse: boolean;
+  canPlaySlowForward: boolean;
+  canPlaySlowReverse: boolean;
+  canStepBackward: boolean;
+  canStepForward: boolean;
+  currentTime: number;
+  duration: number;
+  naturalSize: {
+      height: number;
+      width: number;
+      orientation: 'portrait' | 'landscape';
+  };
+}
+
+export interface OnProgressData {
+  currentTime: number;
+  playableDuration: number;
+  seekableDuration: number;
+}
+
+export interface OnBandwidthUpdateData {
+  bitrate: number;
+}
+
+export interface LoadError {
+  error: {
+      '': string;
+      errorString: string;
+  };
+}
+
+export interface OnSeekData {
+  currentTime: number;
+  seekTime: number;
+  target?: number;
+}
+
+export interface OnPlaybackRateData {
+  playbackRate: number;
+}
+
+export interface OnPictureInPictureStatusData {
+  isActive: boolean;
+}
+
+export interface OnExternalPlaybackChangeData {
+  isExternalPlaybackActive: boolean;
+}
+
+export interface OnBufferData {
+  isBuffering: boolean;
+}
+
 export enum FilterType {
   NONE = '',
   INVERT = 'CIColorInvert',
@@ -26,128 +99,102 @@ export enum FilterType {
   SEPIA = 'CISepiaTone',
 }
 
-export enum TextTrackType {
-  SRT = 'application/x-subrip',
-  TTML = 'application/ttml+xml',
-  VTT = 'text/vtt',
+export interface BaseVideoProps extends ViewProps {
+  /* Native only */
+  src?: any;
+  seek?: number;
+  fullscreen?: boolean;
+  fullscreenOrientation?: 'all' | 'landscape' | 'portrait';
+  fullscreenAutorotate?: boolean;
+
+  /* Wrapper component */
+  // Opaque type returned by require('./video.mp4')
+  source: { uri?: string, headers?: {[key: string]: string } } | number;
+  minLoadRetryCount?: number;
+  maxBitRate?: number;
+  resizeMode?: ImageResizeMode;
+  repeat?: boolean;
+  automaticallyWaitsToMinimizeStalling?: boolean;
+  paused?: boolean;
+  muted?: boolean;
+  volume?: number;
+  bufferConfig?: {
+      minBufferMs?: number;
+      maxBufferMs?: number;
+      bufferForPlaybackMs?: number;
+      bufferForPlaybackAfterRebufferMs?: number;
+  };
+  ignoreSilentSwitch?: 'ignore' | 'obey';
+  controls?: boolean;
+  currentTime?: number;
+  progressUpdateInterval?: number;
+  allowsExternalPlayback?: boolean;
+  preventsDisplaySleepDuringVideoPlayback?: boolean;
+
+  onLoadStart?(): void;
+  onLoad?(data: OnLoadData): void;
+  onBuffer?(data: OnBufferData): void;
+  onError?(error: LoadError): void;
+  onProgress?(data: OnProgressData): void;
+  onBandwidthUpdate?(data: OnBandwidthUpdateData): void; 
+  onSeek?(data: OnSeekData): void;
+  onEnd?(): void;
+  onFullscreenPlayerWillPresent?(): void;
+  onFullscreenPlayerDidPresent?(): void;
+  onFullscreenPlayerWillDismiss?(): void;
+  onFullscreenPlayerDidDismiss?(): void;
+  onReadyForDisplay?(): void;
+  onPlaybackResume?(): void;
+  onPlaybackRateChange?(data: OnPlaybackRateData): void;
+  onExternalPlaybackChange?(data: OnExternalPlaybackChangeData): void;
+  selectedAudioTrack?: {
+      type: 'system' | 'disabled' | 'title' | 'language' | 'index';
+      value?: string | number;
+  };
+  selectedTextTrack?: {
+      type: 'system' | 'disabled' | 'title' | 'language' | 'index';
+      value?: string | number;
+  };
+  selectedVideoTrack?: {
+      type: 'auto' | 'disabled' | 'resolution' | 'index';
+      value?: string | number;
+  };
+  textTracks?: Array<{
+      title?: string;
+      language?: string;
+      type: 'application/x-subrip' | 'application/ttml+xml' | 'text/vtt';
+      uri: string;
+  }>;
+
+  /* Required by react-native */
+  scaleX?: number;
+  scaleY?: number;
+  translateX?: number;
+  translateY?: number;
+  rotation?: number;
+}
+export interface VideoProps extends BaseVideoProps {
+  filter?: FilterType;
+  filterEnable?: boolean;
+  stereoPan?: number;
+  rate?: number;
+  pictureInPicture?: boolean;
+  playInBackground?: boolean;
+  useTextureView?: boolean;
+  audioOnly?: boolean;
+  onPlaybackStalled?(): void;
+  onAudioFocusChanged?(): void;
+  onAudioBecomingNoisy?(): void;
+  onPictureInPictureStatusChanged?(data: OnPictureInPictureStatusData): void;
+  onRestoreUserInterfaceForPictureInPictureStop?(): void;
+  posterResizeMode?: "stretch" | "contain" | "cover" | "none"; // via Image#resizeMode
+  poster?: string;
+  playWhenInactive?: boolean;
+  reportBandwidth?: boolean;
+  disableFocus?: boolean;
+  hideShutterView?: boolean;
 }
 
-export enum VideoResizeMode {
-  CONTAIN = 'contain',
-  COVER = 'cover',
-  STRETCH = 'stretch',
+export interface VideoState {
+  showPoster: boolean;
 }
-
-export interface VideoProps extends ViewProps {
-    filter?: FilterType;
-    filterEnabled?: boolean;
-
-    /* Native only */
-    src?: object;
-    seek?: number | object;
-    fullscreen?: boolean;
-    onVideoLoadStart?: () => void;
-    onVideoLoad?: () => void;
-    onVideoBuffer?: () => void;
-    onVideoError?: () => void;
-    onVideoProgress?: () => void;
-    onVideoBandwidthUpdate?: () => void;
-    onVideoSeek?: () => void;
-    onVideoEnd?: () => void;
-    onTimedMetadata?: () => void;
-    onVideoAudioBecomingNoisy?: () => void;
-    onVideoExternalPlaybackChange?: () => void;
-    onVideoFullscreenPlayerWillPresent?: () => void;
-    onVideoFullscreenPlayerDidPresent?: () => void;
-    onVideoFullscreenPlayerWillDismiss?: () => void;
-    onVideoFullscreenPlayerDidDismiss?: () => void;
-  
-    /* Wrapper component */
-    source?: 
-      {
-        uri?: string;
-      } |
-      // Opaque type returned by require('./video.mp4')
-      number;
-    drm?: {
-      type?: DRMType;
-      licenseServer?: string;
-      headers?: {};
-      base64Certificate?: boolean;
-      certificateUrl?: string;
-      getLicense?: () => void;
-    };
-    minLoadRetryCount?: number;
-    maxBitRate?: number;
-    resizeMode?: string;
-    poster?: string;
-    posterResizeMode?: ImageResizeMode;
-    repeat?: boolean;
-    automaticallyWaitsToMinimizeStalling?: boolean;
-    allowsExternalPlayback?: boolean;
-    selectedAudioTrack?: {
-      type: string;
-      value: string| number;
-    };
-    selectedVideoTrack?: {
-      type: string;
-      value: string | number
-    };
-    selectedTextTrack?: {
-      type: string;
-      value: string | number
-    };
-    textTracks?: {
-        title?: string;
-        uri: string;
-        type?: TextTrackType;
-        language: string;
-      }[];
-    paused?: boolean;
-    muted?: boolean;
-    volume?: number
-    bufferConfig?: {
-      minBufferMs?: number
-      maxBufferMs?: number
-      bufferForPlaybackMs?: number
-      bufferForPlaybackAfterRebufferMs?: number
-    };
-    stereoPan?: number
-    rate?: number
-    pictureInPicture?: boolean;
-    playInBackground?: boolean;
-    preferredForwardBufferDuration?: number
-    playWhenInactive?: boolean;
-    ignoreSilentSwitch?: 'ignore' |'obey';
-    reportBandwidth?: boolean;
-    disableFocus?: boolean;
-    controls?: boolean;
-    audioOnly?: boolean;
-    currentTime?: number
-    fullscreenAutorotate?: boolean;
-    fullscreenOrientation?: 'all'|'landscape'| 'portrait';
-    progressUpdateInterval?: number
-    useTextureView?: boolean;
-    hideShutterView?: boolean;
-    onLoadStart?: () => void;
-    onLoad?: () => void;
-    onBuffer?: () => void;
-    onError?: () => void;
-    onProgress?: () => void;
-    onBandwidthUpdate?: () => void;
-    onSeek?: () => void;
-    onEnd?: () => void;
-    onFullscreenPlayerWillPresent?: () => void;
-    onFullscreenPlayerDidPresent?: () => void;
-    onFullscreenPlayerWillDismiss?: () => void;
-    onFullscreenPlayerDidDismiss?: () => void;
-    onReadyForDisplay?: () => void;
-    onPlaybackStalled?: () => void;
-    onPlaybackResume?: () => void;
-    onPlaybackRateChange?: () => void;
-    onAudioFocusChanged?: () => void;
-    onAudioBecomingNoisy?: () => void;
-    onPictureInPictureStatusChanged?: () => void;
-    needsToRestoreUserInterfaceForPictureInPictureStop?: () => void;
-    onExternalPlaybackChange?: () => void;
-  }

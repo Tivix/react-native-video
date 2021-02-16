@@ -1,2 +1,2 @@
-export { default as Video } from './Video';
-export { TextTrackType, FilterType, DRMType, VideoProps, VideoResizeMode } from './types';
+export { default } from './Video';
+export { VideoProps, FilterType } from './types.d';
