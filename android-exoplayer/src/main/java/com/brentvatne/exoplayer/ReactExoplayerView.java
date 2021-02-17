@@ -352,7 +352,7 @@ class ReactExoplayerView extends FrameLayout implements
         // Invoking onPlayerStateChanged event for Player
         eventListener = new Player.EventListener() {
             @Override
-            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+            public void onPlayWhenReadyChanged(boolean playWhenReady, int reason) {
                 reLayout(playPauseControlContainer);
                 //Remove this eventListener once its executed. since UI will work fine once after the reLayout is done
                 player.removeListener(eventListener);
@@ -755,14 +755,14 @@ class ReactExoplayerView extends FrameLayout implements
     }
 
     @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        String text = "onStateChanged: playWhenReady=" + playWhenReady + ", playbackState=";
+    public void onPlaybackStateChanged(int playbackState) {
+        String text = "onStateChanged: playWhenReady=" + player.getPlayWhenReady() + ", playbackState=";
         switch (playbackState) {
             case Player.STATE_IDLE:
                 text += "idle";
                 eventEmitter.idle();
                 clearProgressMessageHandler();
-                if (!playWhenReady) {
+                if (!player.getPlayWhenReady()) {
                     setKeepScreenOn(false);
                 }
                 break;
@@ -925,17 +925,15 @@ class ReactExoplayerView extends FrameLayout implements
                 && player.getRepeatMode() == Player.REPEAT_MODE_ONE) {
             eventEmitter.end();
         }
+        if (reason == Player.DISCONTINUITY_REASON_SEEK) {
+            eventEmitter.seek(player.getCurrentPosition(), seekTime);
+            seekTime = C.TIME_UNSET;
+        }
     }
 
     @Override
     public void onTimelineChanged(Timeline timeline, int reason) {
         // Do nothing.
-    }
-
-    @Override
-    public void onSeekProcessed() {
-        eventEmitter.seek(player.getCurrentPosition(), seekTime);
-        seekTime = C.TIME_UNSET;
     }
 
     @Override
