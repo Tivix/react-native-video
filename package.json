@@ -46,10 +46,8 @@
     },
     "files": [
         "android-exoplayer",
-        "android",
         "dom",
         "ios",
-        "windows",
         "FilterType.js",
         "DRMType.js",
         "TextTrackType.js",

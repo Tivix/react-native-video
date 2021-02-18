@@ -29,7 +29,6 @@ Version 3.0 features a number of changes to existing behavior. See [Updating](#u
   * [iOS](#ios-installation)
   * [tvOS](#tvos-installation)
   * [Android](#android-installation)
-  * [Windows](#windows-installation)
   * [react-native-dom](#react-native-dom-installation)
 * [Usage](#usage)
 * [iOS App Transport Security](#ios-app-transport-security)
@@ -132,13 +131,6 @@ include ':react-native-video'
 project(':react-native-video').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-video/android-exoplayer')
 ```
 
-If you need to use the old Android MediaPlayer based player, use the following instead:
-
-```gradle
-include ':react-native-video'
-project(':react-native-video').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-video/android')
-```
-
 #### **android/app/build.gradle**
 
 From version >= 5.0.0, you have to apply these changes:
@@ -181,38 +173,6 @@ protected List<ReactPackage> getPackages() {
     );
 }
 ```
-</details>
-
-### Windows installation
-<details>
-  <summary>Windows RNW C++/WinRT details</summary>
-
-Make the following additions to the given files manually:
-
-#### **windows/myapp.sln**
-
-Add the `ReactNativeVideoCPP` project to your solution.
-
-1. Open the solution in Visual Studio 2019
-2. Right-click Solution icon in Solution Explorer > Add > Existing Project
-   Select `node_modules\react-native-video\windows\ReactNativeVideoCPP\ReactNativeVideoCPP.vcxproj`
-
-#### **windows/myapp/myapp.vcxproj**
-
-Add a reference to `ReactNativeVideoCPP` to your main application project. From Visual Studio 2019:
-
-1. Right-click main application project > Add > Reference...
-  Check `ReactNativeVideoCPP` from Solution Projects.
-
-2. Modify files below to add the video package providers to your main application project
-#### **pch.h**
-
-Add `#include "winrt/ReactNativeVideoCPP.h"`.
-
-#### **app.cpp**
-
-Add `PackageProviders().Append(winrt::ReactNativeVideoCPP::ReactPackageProvider());` before `InitializeComponent();`.
-
 </details>
 
 ### react-native-dom installation
@@ -403,8 +363,6 @@ Determines whether to show player controls.
 
 Note on iOS, controls are always shown when in fullscreen mode.
 
-For Android MediaPlayer, you will need to build your own controls or use a package like [react-native-video-controls](https://github.com/itsnubix/react-native-video-controls) or [react-native-video-player](https://github.com/cornedor/react-native-video-player).
-
 Note on Android ExoPlayer, native controls are available by default. If needed, you can also add your controls or use a package like [react-native-video-controls].
 
 Platforms: Android ExoPlayer, iOS, react-native-dom
@@ -581,7 +539,7 @@ To use this feature on iOS, you must:
 * [Enable Background Audio](https://developer.apple.com/library/archive/documentation/Audio/Conceptual/AudioSessionProgrammingGuide/AudioSessionBasics/AudioSessionBasics.html#//apple_ref/doc/uid/TP40007875-CH3-SW3) in your Xcode project
 * Set the ignoreSilentSwitch prop to "ignore"
 
-Platforms: Android ExoPlayer, Android MediaPlayer, iOS
+Platforms: Android ExoPlayer, iOS
 
 #### playWhenInactive
 Determine whether the media should continue playing when notifications or the Control Center are in front of the video.
@@ -636,8 +594,6 @@ Speed at which the media should play.
 
 Platforms: all
 
-Note: For Android MediaPlayer, rate is only supported on Android 6.0 and higher devices.
-
 #### repeat
 Determine whether to repeat the video when the end is reached
 * **false (default)** - Don't repeat the video
@@ -660,7 +616,7 @@ Determines how to resize the video when the frame doesn't match the raw video di
 * **"cover"** - Scale the video uniformly (maintain the video's aspect ratio) so that both dimensions (width and height) of the image will be equal to or larger than the corresponding dimension of the view (minus padding).
 * **"stretch"** - Scale width and height independently, This may change the aspect ratio of the src.
 
-Platforms: Android ExoPlayer, Android MediaPlayer, iOS, Windows UWP
+Platforms: Android ExoPlayer, iOS
 
 #### selectedAudioTrack
 Configure which audio track, if any, is played.
@@ -790,7 +746,7 @@ source={{ uri: 'file:///sdcard/Movies/sintel.mp4' }}
 
 Note: Your app will need to request permission to read external storage if you're accessing a file outside your app.
 
-Platforms: Android ExoPlayer, Android MediaPlayer, possibly others
+Platforms: Android ExoPlayer, possibly others
 
 ###### iPod Library (ipod-library://)
 
@@ -820,15 +776,6 @@ type: 'mpd' }}
 
 The following other types are supported on some platforms, but aren't fully documented yet:
 `content://, ms-appx://, ms-appdata://, assets-library://`
-
-
-#### stereoPan
-Adjust the balance of the left and right audio channels.  Any value between –1.0 and 1.0 is accepted.
-* **-1.0** - Full left
-* **0.0 (default)** - Center
-* **1.0** - Full right
-
-Platforms: Android MediaPlayer
 
 #### textTracks
 Load one or more "sidecar" text tracks. This takes an array of objects representing each track. Each object should have the format:
@@ -954,28 +901,28 @@ Callback function that is called when the player is about to enter fullscreen mo
 
 Payload: none
 
-Platforms: Android ExoPlayer, Android MediaPlayer, iOS
+Platforms: Android ExoPlayer, iOS
 
 #### onFullscreenPlayerDidPresent
 Callback function that is called when the player has entered fullscreen mode.
 
 Payload: none
 
-Platforms: Android ExoPlayer, Android MediaPlayer, iOS
+Platforms: Android ExoPlayer, iOS
 
 #### onFullscreenPlayerWillDismiss
 Callback function that is called when the player is about to exit fullscreen mode.
 
 Payload: none
 
-Platforms: Android ExoPlayer, Android MediaPlayer, iOS
+Platforms: Android ExoPlayer, iOS
 
 #### onFullscreenPlayerDidDismiss
 Callback function that is called when the player has exited fullscreen mode.
 
 Payload: none
 
-Platforms: Android ExoPlayer, Android MediaPlayer, iOS
+Platforms: Android ExoPlayer, iOS
 
 #### onLoad
 Callback function that is called when the media is loaded and ready to play.
@@ -1034,8 +981,8 @@ Payload:
 Property | Description
 --- | ---
 isNetwork | boolean | Boolean indicating if the media is being loaded from the network
-type | string | Type of the media. Not available on Windows
-uri | string | URI for the media source. Not available on Windows
+type | string | Type of the media. 
+uri | string | URI for the media source. 
 
 Example:
 ```
@@ -1054,10 +1001,9 @@ Callback function that is called when the first video frame is ready for display
 Payload: none
 
 * iOS: [readyForDisplay](https://developer.apple.com/documentation/avkit/avplayerviewcontroller/1615830-readyfordisplay?language=objc)
-* Android: [MEDIA_INFO_VIDEO_RENDERING_START](https://developer.android.com/reference/android/media/MediaPlayer#MEDIA_INFO_VIDEO_RENDERING_START)
 * Android ExoPlayer [STATE_READY](https://exoplayer.dev/doc/reference/com/google/android/exoplayer2/Player.html#STATE_READY)
 
-Platforms: Android ExoPlayer, Android MediaPlayer, iOS, Web
+Platforms: Android ExoPlayer, iOS, Web
 
 #### onPictureInPictureStatusChanged
 Callback function that is called when picture in picture becomes active or inactive.
@@ -1133,7 +1079,7 @@ Example:
 Both the currentTime & seekTime are reported because the video player may not seek to the exact requested position in order to improve seek performance.
 
 
-Platforms: Android ExoPlayer, Android MediaPlayer, iOS, Windows UWP
+Platforms: Android ExoPlayer, iOS
 
 #### onRestoreUserInterfaceForPictureInPictureStop
 Callback function that corresponds to Apple's [`restoreUserInterfaceForPictureInPictureStopWithCompletionHandler`](https://developer.apple.com/documentation/avkit/avpictureinpicturecontrollerdelegate/1614703-pictureinpicturecontroller?language=objc). Call `restoreUserInterfaceForPictureInPictureStopCompleted` inside of this function when done restoring the user interface. 
@@ -1162,9 +1108,7 @@ Example:
 }
 ```
 
-Support for timed metadata on Android MediaPlayer is limited at best and only compatible with some videos. It requires a target SDK of 23 or higher.
-
-Platforms: Android ExoPlayer, Android MediaPlayer, iOS
+Platforms: Android ExoPlayer, iOS
 
 ### Methods
 Methods operate on a ref to the Video element. You can create a ref using code like:
@@ -1185,7 +1129,7 @@ Example:
 this.player.dismissFullscreenPlayer();
 ```
 
-Platforms: Android ExoPlayer, Android MediaPlayer, iOS
+Platforms: Android ExoPlayer, iOS
 
 #### presentFullscreenPlayer
 `presentFullscreenPlayer()`
@@ -1194,14 +1138,14 @@ Put the player in fullscreen mode.
 
 On iOS, this displays the video in a fullscreen view controller with controls.
 
-On Android ExoPlayer & MediaPlayer, this puts the navigation controls in fullscreen mode. It is not a complete fullscreen implementation, so you will still need to apply a style that makes the width and height match your screen dimensions to get a fullscreen video.
+On Android ExoPlayer, this puts the navigation controls in fullscreen mode. It is not a complete fullscreen implementation, so you will still need to apply a style that makes the width and height match your screen dimensions to get a fullscreen video.
 
 Example:
 ```
 this.player.presentFullscreenPlayer();
 ```
 
-Platforms: Android ExoPlayer, Android MediaPlayer, iOS
+Platforms: Android ExoPlayer, iOS
 
 #### save
 `save(): Promise`
@@ -1406,7 +1350,7 @@ android {
 ```
 
 #### ExoPlayer no longer detaches
-When using a router like the react-navigation TabNavigator, switching between tab routes would previously cause ExoPlayer to detach causing the video player to pause. We now don't detach the view, allowing the video to continue playing in a background tab. This matches the behavior for iOS. Android MediaPlayer will crash if it detaches when switching routes, so its behavior has not been changed.
+When using a router like the react-navigation TabNavigator, switching between tab routes would previously cause ExoPlayer to detach causing the video player to pause. We now don't detach the view, allowing the video to continue playing in a background tab. This matches the behavior for iOS.
 
 #### useTextureView now defaults to true
 The SurfaceView, which ExoPlayer has been using by default has a number of quirks that people are unaware of and often cause issues. This includes not supporting animations or scaling. It also causes strange behavior if you overlay two videos on top of each other, because the SurfaceView will [punch a hole](https://developer.android.com/reference/android/view/SurfaceView) through other views. Since TextureView doesn't have these issues and behaves in the way most developers expect, it makes sense to make it the default.
@@ -1421,8 +1365,6 @@ Previously, on Android ExoPlayer if the paused prop was not set, the media would
 
 #### All platforms now keep their paused state when returning from the background
 Previously, on Android MediaPlayer if you setup an AppState event when the app went into the background and set a paused prop so that when you returned to the app the video would be paused it would be ignored.
-
-Note, Windows does not have a concept of an app going into the background, so this doesn't apply there.
 
 #### Use Android target SDK 27 by default
 Version 3.0 updates the Android build tools and SDK to version 27. React Native is in the process of [switchting over](https://github.com/facebook/react-native/issues/18095#issuecomment-395596130) to SDK 27 in preparation for Google's requirement that new Android apps [use SDK 26](https://android-developers.googleblog.com/2017/12/improving-app-security-and-performance.html) by August 2018.
