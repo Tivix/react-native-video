@@ -1,4 +1,4 @@
-import { ViewProps, ImageResizeMode } from 'react-native';
+import { ViewProps, ImageResizeMode, ImageResolvedAssetSource } from 'react-native';
 
 export enum DRMType {
   WIDEVINE = 'widevine',
@@ -17,6 +17,45 @@ export enum VideoResizeMode {
   CONTAIN = 'contain',
   COVER = 'cover',
   STRETCH = 'stretch',
+}
+
+export enum FilterType {
+  NONE = '',
+  INVERT = 'CIColorInvert',
+  MONOCHROME = 'CIColorMonochrome',
+  POSTERIZE = 'CIColorPosterize',
+  FALSE = 'CIFalseColor',
+  MAXIMUMCOMPONENT = 'CIMaximumComponent',
+  MINIMUMCOMPONENT = 'CIMinimumComponent',
+  CHROME = 'CIPhotoEffectChrome',
+  FADE = 'CIPhotoEffectFade',
+  INSTANT = 'CIPhotoEffectInstant',
+  MONO = 'CIPhotoEffectMono',
+  NOIR = 'CIPhotoEffectNoir',
+  PROCESS = 'CIPhotoEffectProcess',
+  TONAL = 'CIPhotoEffectTonal',
+  TRANSFER = 'CIPhotoEffectTransfer',
+  SEPIA = 'CISepiaTone',
+}
+
+export interface DRM {
+  type: DRMType;
+  licenseServer: string;
+  headers: Record<string, string>;
+  getLicense?: (spcBase64: string, contentId: string, licenseUrl: string) => Promise<string | undefined>;
+}
+
+export interface ResolvedAssetSource extends ImageResolvedAssetSource {
+  type?: string;
+  mainVer?: number;
+  patchVer?: string;
+  headers?: Record<string, string>;
+  __packager_asset?: boolean;
+}
+
+export interface TimedMetadata {
+  value: string;
+  identifier: string;
 }
 
 export interface OnSeekData {
@@ -80,28 +119,14 @@ export interface OnBufferData {
   isBuffering: boolean;
 }
 
-export enum FilterType {
-  NONE = '',
-  INVERT = 'CIColorInvert',
-  MONOCHROME = 'CIColorMonochrome',
-  POSTERIZE = 'CIColorPosterize',
-  FALSE = 'CIFalseColor',
-  MAXIMUMCOMPONENT = 'CIMaximumComponent',
-  MINIMUMCOMPONENT = 'CIMinimumComponent',
-  CHROME = 'CIPhotoEffectChrome',
-  FADE = 'CIPhotoEffectFade',
-  INSTANT = 'CIPhotoEffectInstant',
-  MONO = 'CIPhotoEffectMono',
-  NOIR = 'CIPhotoEffectNoir',
-  PROCESS = 'CIPhotoEffectProcess',
-  TONAL = 'CIPhotoEffectTonal',
-  TRANSFER = 'CIPhotoEffectTransfer',
-  SEPIA = 'CISepiaTone',
+export interface OnTimedMetadataData {
+  metadata: TimedMetadata[];
 }
 
 export interface BaseVideoProps extends ViewProps {
   /* Native only */
   src?: any;
+  drm?: DRM;
   seek?: number;
   fullscreen?: boolean;
   fullscreenOrientation?: 'all' | 'landscape' | 'portrait';
@@ -130,13 +155,12 @@ export interface BaseVideoProps extends ViewProps {
   progressUpdateInterval?: number;
   allowsExternalPlayback?: boolean;
   preventsDisplaySleepDuringVideoPlayback?: boolean;
-
-  onLoadStart?(): void;
+  onLoadStart?(src: {uri: string, type: string, isNetwork: boolean}): void;
   onLoad?(data: OnLoadData): void;
   onBuffer?(data: OnBufferData): void;
   onError?(error: LoadError): void;
   onProgress?(data: OnProgressData): void;
-  onBandwidthUpdate?(data: OnBandwidthUpdateData): void; 
+  onBandwidthUpdate?(data: OnBandwidthUpdateData): void;
   onSeek?(data: OnSeekData): void;
   onEnd?(): void;
   onFullscreenPlayerWillPresent?(): void;
@@ -144,9 +168,10 @@ export interface BaseVideoProps extends ViewProps {
   onFullscreenPlayerWillDismiss?(): void;
   onFullscreenPlayerDidDismiss?(): void;
   onReadyForDisplay?(): void;
-  onPlaybackResume?(): void;
+  onPlaybackResume?(data: OnPlaybackRateData): void;
   onPlaybackRateChange?(data: OnPlaybackRateData): void;
   onExternalPlaybackChange?(data: OnExternalPlaybackChangeData): void;
+  onTimedMetadata?(data: OnTimedMetadataData): void;
   selectedAudioTrack?: {
       type: 'system' | 'disabled' | 'title' | 'language' | 'index';
       value?: string | number;
@@ -183,11 +208,11 @@ export interface VideoProps extends BaseVideoProps {
   useTextureView?: boolean;
   audioOnly?: boolean;
   onPlaybackStalled?(): void;
-  onAudioFocusChanged?(): void;
+  onAudioFocusChanged?(event: { hasAudioFocus: boolean }): void;
   onAudioBecomingNoisy?(): void;
   onPictureInPictureStatusChanged?(data: OnPictureInPictureStatusData): void;
   onRestoreUserInterfaceForPictureInPictureStop?(): void;
-  posterResizeMode?: "stretch" | "contain" | "cover" | "none"; // via Image#resizeMode
+  posterResizeMode?: ImageResizeMode;
   poster?: string;
   playWhenInactive?: boolean;
   reportBandwidth?: boolean;
