@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, requireNativeComponent, NativeModules, View, Image, Platform, findNodeHandle } from 'react-native';
 import { stringsOnlyObject } from './helpers';
-import { VideoProps, VideoState, VideoResizeMode } from './types.d';
+import { VideoResizeMode } from './types';
 
 const styles = StyleSheet.create({
   base: {
@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class Video extends Component<VideoProps, VideoState> {
+export default class Video extends Component {
 
   constructor(props) {
     super(props);
@@ -24,7 +24,7 @@ export default class Video extends Component<VideoProps, VideoState> {
   }
 
   seek = (time, tolerance = 100) => {
-    if (isNaN(time)) {throw new Error('Specified time is not a number');}
+    if (isNaN(time)) { throw new Error('Specified time is not a number'); }
 
     if (Platform.OS === 'ios') {
       this.setNativeProps({
@@ -46,7 +46,7 @@ export default class Video extends Component<VideoProps, VideoState> {
     this.setNativeProps({ fullscreen: false });
   };
 
-  save = async (options?) => {
+  save = async (options) => {
     return await NativeModules.VideoManager.save(options, findNodeHandle(this._root));
   }
 
@@ -220,7 +220,7 @@ export default class Video extends Component<VideoProps, VideoState> {
           NativeModules.VideoManager.setLicenseError && NativeModules.VideoManager.setLicenseError(error, findNodeHandle(this._root));
         });
       } else {
-        NativeModules.VideoManager.setLicenseError && NativeModules.VideoManager.setLicenseError("No spc received", findNodeHandle(this._root));
+        NativeModules.VideoManager.setLicenseError && NativeModules.VideoManager.setLicenseError('No spc received', findNodeHandle(this._root));
       }
     }
   }

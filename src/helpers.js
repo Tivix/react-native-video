@@ -1,4 +1,4 @@
-export function toTypeString(x: any): string {
+export function toTypeString(x) {
   switch (typeof x) {
     case 'object':
       return x instanceof Date
@@ -11,7 +11,7 @@ export function toTypeString(x: any): string {
   }
 }
 
-export function stringsOnlyObject(obj: object) {
+export function stringsOnlyObject(obj) {
   const strObj = {};
 
   Object.keys(obj).forEach(x => {
