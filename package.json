@@ -3,7 +3,7 @@
     "version": "5.1.1",
     "description": "A <Video /> element for react-native",
     "main": "dist/index.js",
-    "types": "dist/types.d.ts",
+    "types": "dist/index.d.ts",
     "license": "MIT",
     "author": "Brent Vatne <brentvatne@gmail.com> (https://github.com/brentvatne)",
     "contributors": [
