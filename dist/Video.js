@@ -31,7 +31,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
 const react_native_1 = require("react-native");
 const helpers_1 = require("./helpers");
-const types_d_1 = require("./types.d");
+const types_1 = require("./types");
 const styles = react_native_1.StyleSheet.create({
     base: {
         overflow: 'hidden',
@@ -242,13 +242,13 @@ class Video extends react_1.Component {
         const isAsset = !!(uri && uri.match(/^(assets-library|ipod-library|file|content|ms-appx|ms-appdata):/));
         let nativeResizeMode;
         const RCTVideoInstance = this.getViewManagerConfig('RCTVideo');
-        if (resizeMode === types_d_1.VideoResizeMode.STRETCH) {
+        if (resizeMode === types_1.VideoResizeMode.STRETCH) {
             nativeResizeMode = RCTVideoInstance.Constants.ScaleToFill;
         }
-        else if (resizeMode === types_d_1.VideoResizeMode.CONTAIN) {
+        else if (resizeMode === types_1.VideoResizeMode.CONTAIN) {
             nativeResizeMode = RCTVideoInstance.Constants.ScaleAspectFit;
         }
-        else if (resizeMode === types_d_1.VideoResizeMode.COVER) {
+        else if (resizeMode === types_1.VideoResizeMode.COVER) {
             nativeResizeMode = RCTVideoInstance.Constants.ScaleAspectFill;
         }
         else {

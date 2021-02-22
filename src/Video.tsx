@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, requireNativeComponent, NativeModules, View, Image, Platform, findNodeHandle } from 'react-native';
 import { stringsOnlyObject } from './helpers';
-import { ResolvedAssetSource, VideoProps, VideoResizeMode, VideoState } from './types.d';
+import { ResolvedAssetSource, VideoProps, VideoResizeMode, VideoState } from './types';
 
 const styles = StyleSheet.create({
   base: {

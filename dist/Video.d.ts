@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import { VideoProps, VideoState } from './types.d';
+import { VideoProps, VideoState } from './types';
 export default class Video extends Component<VideoProps, VideoState> {
     _root: React.RefObject<View>;
     constructor(props: any);
