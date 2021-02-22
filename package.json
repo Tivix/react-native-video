@@ -2,8 +2,8 @@
     "name": "react-native-video",
     "version": "5.1.1",
     "description": "A <Video /> element for react-native",
-    "main": "src/index.js",
-    "types": "src/types.d.ts",
+    "main": "dist/index.js",
+    "types": "dist/types.d.ts",
     "license": "MIT",
     "author": "Brent Vatne <brentvatne@gmail.com> (https://github.com/brentvatne)",
     "contributors": [
@@ -29,25 +29,29 @@
         "url": "git@github.com:react-native-community/react-native-video.git"
     },
     "peerDependencies": {
-        "@types/react": "^17.0.2",
-        "@types/react-native": "^0.63.50",
         "react": "^17.0.1",
         "react-native": "^0.63.4"
     },
     "devDependencies": {
         "@react-native-community/eslint-config": "2.0.0",
+        "@types/react": "^17.0.2",
+        "@types/react-native": "^0.63.50",
         "babel-eslint": "10.1.0",
         "eslint": "7.20.0",
+        "react": "^17.0.1",
+        "react-native": "^0.63.4",
         "typescript": "4.0.7"
     },
     "scripts": {
+        "postinstall": "yarn compile",
+        "compile": "tsc --project tsconfig.json",
         "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
     },
     "files": [
         "android-exoplayer",
         "dom",
         "ios",
-        "src",
+        "dist",
         "react-native-video.podspec"
     ]
 }
