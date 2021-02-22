@@ -185,7 +185,7 @@ export default class Video extends Component<VideoProps, VideoState> {
     }
   };
 
-  _onRestoreUserInterfaceForPictureInPictureStop = (event) => {
+  _onRestoreUserInterfaceForPictureInPictureStop = () => {
     if (this.props.onRestoreUserInterfaceForPictureInPictureStop) {
       this.props.onRestoreUserInterfaceForPictureInPictureStop();
     }
