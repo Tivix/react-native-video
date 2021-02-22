@@ -375,7 +375,7 @@ Determines whether video audio should override background music/audio in Android
 Platforms: Android Exoplayer
 
 ### DRM
-To setup DRM please follow [this guide](./DRM.md)
+To setup DRM please follow [this guide](./docs/DRM.md)
 
 Platforms: Android Exoplayer, iOS
 
