@@ -43,7 +43,6 @@
         "typescript": "4.0.7"
     },
     "scripts": {
-        "postinstall": "yarn compile",
         "compile": "tsc --project tsconfig.json",
         "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
     },
