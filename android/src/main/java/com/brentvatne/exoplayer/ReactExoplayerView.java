@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -66,12 +67,18 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultLoadErrorHandlingPolicy;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheKeyFactory;
+import com.google.android.exoplayer2.upstream.cache.CacheWriter;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -160,6 +167,9 @@ class ReactExoplayerView extends FrameLayout implements
     private String[] drmLicenseHeader = null;
     private boolean controls;
     // \ End props
+
+    private CacheDataSource.Factory cacheDataSourceFactory;
+    private SimpleCache videoCache = VideoCache.getInstance(getContext());
 
     // React
     private final ThemedReactContext themedReactContext;
@@ -461,6 +471,11 @@ class ReactExoplayerView extends FrameLayout implements
                 initializePlayerControl();
                 setControls(controls);
                 applyModifiers();
+                CacheWriter.ProgressListener progressListener = (requestLength, bytesCached, newBytesCached) -> {
+                    double downloadPercentage = (bytesCached * 100.0 / requestLength);
+                    Log.d(themedReactContext.toString(), String.valueOf(downloadPercentage));
+                };
+                cacheVideo(new DataSpec(srcUri), CacheKeyFactory.DEFAULT, mediaDataSourceFactory.createDataSource(), progressListener);
             }
         }, 1);
     }
@@ -1403,5 +1418,28 @@ class ReactExoplayerView extends FrameLayout implements
                 removeViewAt(indexOfPC);
             }
         }
+    }
+
+    /**
+     * Used to starting caching a video
+     */
+    private void cacheVideo(
+            DataSpec dataSpec,
+            CacheKeyFactory defaultCacheKeyFactory,
+            DataSource dataSource,
+            CacheWriter.ProgressListener progressListener
+    ) {
+        CacheDataSource cacheDataSource = new CacheDataSource(videoCache, dataSource);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new CacheWriter(cacheDataSource, dataSpec, false, null, progressListener).cache();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 }
