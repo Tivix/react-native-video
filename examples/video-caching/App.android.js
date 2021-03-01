@@ -36,8 +36,8 @@ export default class App extends Component<Props, State> {
       <View style={styles.container}>
         <Video
           source={
-            //this.state.showLocal ?
-              //require('../basic/broadchurch.mp4') :
+            this.state.showLocal ?
+              require('../basic/broadchurch.mp4') :
               {
                 uri:  "https://rawgit.com/mediaelement/mediaelement-files/master/big_buck_bunny.mp4"
               }
