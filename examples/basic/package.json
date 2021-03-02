@@ -11,9 +11,12 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "appium": "^1.20.2",
+    "appium-doctor": "^1.16.0",
     "react": "16.13.1",
     "react-native": "0.63.4",
-    "react-native-video": "file:../.."
+    "react-native-video": "file:../..",
+    "wd": "^1.14.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

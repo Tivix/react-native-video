@@ -119,6 +119,7 @@ class VideoPlayer extends Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity
+          accessibilityLabel='play'
           style={styles.fullScreen}
           onPress={() => this.setState({paused: !this.state.paused})}>
           <Video
