@@ -1,11 +1,12 @@
 import wd from 'wd';
+import path from 'path';
+
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
 const PORT = 4723;
 const config = {
-  platformName: 'iOS',
-  platformVersion: '14.4',
-  deviceName: 'iPhone 11',
-  app: '/Users/tivix/Library/Developer/Xcode/DerivedData/VideoPlayer-ffzpzynmurhabocxnmcuatiuushh/Build/Products/Debug-iphonesimulator/VideoPlayer.app' // relative to the root of the project
+  platformName: 'Android',
+  deviceName: 'Android Emulator',
+  app: path.join(process.cwd(), 'android/app/build/outputs/apk/release/app-release.apk')
 };
 const driver = wd.promiseChainRemote('localhost', PORT);
 
@@ -25,4 +26,3 @@ test('my first appium test', async () => {
   await driver.sleep(3000);
   expect(await driver.hasElementByAccessibilityId('notHere')).toBe(false);
 });
-
