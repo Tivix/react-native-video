@@ -47,8 +47,7 @@
         "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
     },
     "files": [
-        "android-exoplayer",
-        "dom",
+        "android",
         "ios",
         "dist",
         "react-native-video.podspec"
