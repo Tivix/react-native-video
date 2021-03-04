@@ -35,14 +35,17 @@ export default class App extends Component<Props> {
         controls={true}
       />
       <Button accessibilityLabel='fullButton' title="full screen" onPress={ this.onPress.bind(this) }></Button>
+      <Button accessibilityLabel='seekButton' title="SeekTo2" onPress={ this.onSeekPress.bind(this) }></Button>
     </View>
   }
 
   onPress() {
-    //if (this.videoPlayer!=null)
-      //this.videoPlayer.presentFullscreenPlayer();
+    if (this.videoPlayer!=null)
+      this.videoPlayer.presentFullscreenPlayer();
+  }
+
+  onSeekPress() {
     this.videoPlayer.seek(2);
-    console.log(this.videoPlayer.props);
   }
 
   resizeVideoPlayer() {

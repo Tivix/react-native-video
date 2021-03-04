@@ -19,9 +19,8 @@ afterAll(async function() {
   await driver.quit();
 });
 
-test('my first appium test', async () => {
+test('testPlayButton', async () => {
   expect(await driver.hasElementByAccessibilityId('play')).toBe(true);
   const element = await driver.elementByAccessibilityId('play')
   await element.click()
-  expect(await driver.hasElementByAccessibilityId('notHere')).toBe(false);
 });

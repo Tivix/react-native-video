@@ -21,11 +21,15 @@ afterAll(async function() {
   await driver.quit();
 });
 
-test('my first appium test', async () => {
+test('testFullScreenButton', async () => {
   expect(await driver.hasElementByAccessibilityId('fullButton')).toBe(true);
   const element = await driver.elementByAccessibilityId('fullButton');
   await element.click();
-  await driver.sleep(3000);
-  expect(await driver.hasElementByAccessibilityId('notHere')).toBe(false);
+});
+
+test('testSeekButton', async () => {
+  expect(await driver.hasElementByAccessibilityId('seekButton')).toBe(true);
+  const element = await driver.elementByAccessibilityId('seekButton');
+  await element.click();
 });
 
