@@ -1,10 +1,13 @@
 import wd from 'wd';
+import path from 'path';
+
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
 const PORT = 4723;
 const config = {
-  platformName: 'Android',
-  deviceName: 'Android Emulator',
-  app: '/Users/tivix/Documents/react-native-video/examples/basic/android/app/build/outputs/apk/debug/app-debug.apk'
+  platformName: 'iOS',
+  platformVersion: '14.4',
+  deviceName: 'iPhone 11',
+  app: path.join(process.cwd(), 'ios/build/Build/Products/Debug-iphonesimulator/VideoPlayer.app')
 };
 const driver = wd.promiseChainRemote('localhost', PORT);
 

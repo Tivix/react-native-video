@@ -1,4 +1,6 @@
 import wd from 'wd';
+import path from 'path';
+
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
 const PORT = 4723;
 const config = {
@@ -6,7 +8,7 @@ const config = {
   platformVersion: '14.4',
   deviceName: 'iPhone 11',
   automationName: 'XCUITest',
-  app: '/Users/tivix/Library/Developer/Xcode/DerivedData/VideoPlayer-esvesusnhietkthdmhikkwaukxls/Build/Products/Debug-iphonesimulator/VideoPlayer.app' // relative to the root of the project
+  app: path.join(process.cwd(), 'ios/build/Build/Products/Debug-iphonesimulator/VideoPlayer.app')
 };
 const driver = wd.promiseChainRemote('localhost', PORT);
 

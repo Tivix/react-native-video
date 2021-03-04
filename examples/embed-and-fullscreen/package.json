@@ -9,10 +9,9 @@
     "test": "jest --testMatch=\"**/__tests__/**/!(*e2e.js)\"",
     "lint": "eslint .",
     "android:release": "adb uninstall com.videoplayer && react-native run-android --variant=release",
+    "ios:build": "xcodebuild -workspace ios/VideoPlayer.xcworkspace -configuration Debug -scheme VideoPlayer  -destination 'platform=iOS Simulator,name=iPhone 11' -derivedDataPath \"./ios/build\"",
     "start:appium": "appium",
-    "test:e2e": "jest --testMatch=\"**/__tests__/**/*e2e.js\"",
-		"test:e2e:android": "E2E_DEVICE=\"android-emulator\" npm run test:e2e",
-		"test:e2e:ios": "E2E_DEVICE=\"ios-emulator\"  npm run test:e2e"
+    "test:e2e": "jest --testMatch=\"**/__tests__/**/*e2e.js\""
   },
   "dependencies": {
     "appium": "^1.20.2",
