@@ -25,3 +25,8 @@ test('testPlayButton', async () => {
   const element = await driver.elementByAccessibilityId('play')
   await element.click()
 });
+
+test('testPlayerExists', async () => {
+  await driver.sleep(3000);
+  expect(await driver.hasElementByAccessibilityId('player')).toBe(true);
+});

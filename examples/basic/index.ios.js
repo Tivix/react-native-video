@@ -217,12 +217,14 @@ class VideoPlayer extends Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity
+          accessible={false}
           accessibilityLabel='play'
           style={styles.fullScreen}
           onPress={() => {
             this.setState({paused: !this.state.paused});
           }}>
           <Video
+            accessibilityLabel='player'
             source={require('./broadchurch.mp4')}
             style={styles.fullScreen}
             rate={this.state.rate}
@@ -326,6 +328,7 @@ class VideoPlayer extends Component {
       <View style={styles.container}>
         <View style={styles.fullScreen}>
           <Video
+            accessibilityLabel='player'
             source={require('./broadchurch.mp4')}
             style={videoStyle}
             rate={this.state.rate}

@@ -19,6 +19,10 @@ afterAll(async function() {
   await driver.quit();
 });
 
+test('testPlayerExists', async () => {
+  expect(await driver.hasElementByAccessibilityId('player')).toBe(true);
+});
+
 test('testPlayButton', async () => {
   expect(await driver.hasElementByAccessibilityId('play')).toBe(true);
   const element = await driver.elementByAccessibilityId('play')

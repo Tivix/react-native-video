@@ -123,6 +123,7 @@ class VideoPlayer extends Component {
           style={styles.fullScreen}
           onPress={() => this.setState({paused: !this.state.paused})}>
           <Video
+            accessibilityLabel='player'
             ref={(ref) => {
               this.video = ref;
             }}
