@@ -19,17 +19,17 @@ afterAll(async function() {
   await driver.quit();
 });
 
-test('testPlayerExists', async () => {
+test('Player is launched', async () => {
   expect(await driver.hasElementByAccessibilityId('player')).toBe(true);
 });
 
-test('testPlayButton', async () => {
+test('Player starts playing video on "play" tap', async () => {
   expect(await driver.hasElementByAccessibilityId('play')).toBe(true);
   const element = await driver.elementByAccessibilityId('play')
   await element.click()
 });
 
-test('testSeekButton', async () => {
+test('Seek player to specific time', async () => {
   expect(await driver.hasElementByAccessibilityId('seekButton')).toBe(true);
   const element = await driver.elementByAccessibilityId('seekButton');
   await element.click();
