@@ -1,7 +1,7 @@
 ## Testing
 * `yarn install` and `cd ios; pod install`
 * Build the apps
-  * ios - `yarn build:build`
+  * ios - `yarn build:ios`
   * android - `yarn build:android`
 * Start ReactJS server: `yarn start`
 * Start Appium - by desktop app(recommended) or by `yarn appium`
