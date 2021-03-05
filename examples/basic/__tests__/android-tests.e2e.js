@@ -28,3 +28,9 @@ test('testPlayButton', async () => {
   const element = await driver.elementByAccessibilityId('play')
   await element.click()
 });
+
+test('testSeekButton', async () => {
+  expect(await driver.hasElementByAccessibilityId('seekButton')).toBe(true);
+  const element = await driver.elementByAccessibilityId('seekButton');
+  await element.click();
+});

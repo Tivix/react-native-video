@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   AppRegistry,
@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Button
 } from 'react-native';
 
 import Video from 'react-native-video';
@@ -26,24 +27,24 @@ class VideoPlayer extends Component {
   video;
 
   onLoad = (data) => {
-    this.setState({duration: data.duration});
+    this.setState({ duration: data.duration });
   };
 
   onProgress = (data) => {
-    this.setState({currentTime: data.currentTime});
+    this.setState({ currentTime: data.currentTime });
   };
 
   onEnd = () => {
-    this.setState({paused: true});
+    this.setState({ paused: true });
     this.video.seek(0);
   };
 
   onAudioBecomingNoisy = () => {
-    this.setState({paused: true});
+    this.setState({ paused: true });
   };
 
   onAudioFocusChanged = (event) => {
-    this.setState({paused: !event.hasAudioFocus});
+    this.setState({ paused: !event.hasAudioFocus });
   };
 
   getCurrentTimePercentage() {
@@ -61,12 +62,12 @@ class VideoPlayer extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.setState({rate});
+          this.setState({ rate });
         }}>
         <Text
           style={[
             styles.controlOption,
-            {fontWeight: isSelected ? 'bold' : 'normal'},
+            { fontWeight: isSelected ? 'bold' : 'normal' },
           ]}>
           {rate}x
         </Text>
@@ -80,17 +81,21 @@ class VideoPlayer extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.setState({resizeMode});
+          this.setState({ resizeMode });
         }}>
         <Text
           style={[
             styles.controlOption,
-            {fontWeight: isSelected ? 'bold' : 'normal'},
+            { fontWeight: isSelected ? 'bold' : 'normal' },
           ]}>
           {resizeMode}
         </Text>
       </TouchableOpacity>
     );
+  }
+
+  onSeekPress() {
+    this.video.seek(2);
   }
 
   renderVolumeControl(volume) {
@@ -99,12 +104,12 @@ class VideoPlayer extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.setState({volume});
+          this.setState({ volume });
         }}>
         <Text
           style={[
             styles.controlOption,
-            {fontWeight: isSelected ? 'bold' : 'normal'},
+            { fontWeight: isSelected ? 'bold' : 'normal' },
           ]}>
           {volume * 100}%
         </Text>
@@ -121,7 +126,7 @@ class VideoPlayer extends Component {
         <TouchableOpacity
           accessibilityLabel='play'
           style={styles.fullScreen}
-          onPress={() => this.setState({paused: !this.state.paused})}>
+          onPress={() => this.setState({ paused: !this.state.paused })}>
           <Video
             accessibilityLabel='player'
             ref={(ref) => {
@@ -166,19 +171,27 @@ class VideoPlayer extends Component {
               {this.renderResizeModeControl('contain')}
               {this.renderResizeModeControl('stretch')}
             </View>
+            <View style={styles.mixWithOthersControl}>
+              <TouchableOpacity
+                accessibilityLabel='seekButton'
+                title="SeekTo2"
+                onPress={this.onSeekPress.bind(this)}>
+                <Text>Seekto2</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
           <View style={styles.trackingControls}>
             <View style={styles.progress}>
               <View
-                style={[styles.innerProgressCompleted, {flex: flexCompleted}]}
+                style={[styles.innerProgressCompleted, { flex: flexCompleted }]}
               />
               <View
-                style={[styles.innerProgressRemaining, {flex: flexRemaining}]}
+                style={[styles.innerProgressRemaining, { flex: flexRemaining }]}
               />
             </View>
           </View>
         </View>
+
       </View>
     );
   }

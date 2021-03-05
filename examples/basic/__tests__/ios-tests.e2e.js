@@ -30,3 +30,10 @@ test('testPlayerExists', async () => {
   await driver.sleep(3000);
   expect(await driver.hasElementByAccessibilityId('player')).toBe(true);
 });
+
+test('testSeekButton', async () => {
+  expect(await driver.hasElementByAccessibilityId('seekButton')).toBe(true);
+  const element = await driver.elementByAccessibilityId('seekButton');
+  await element.click();
+});
+
