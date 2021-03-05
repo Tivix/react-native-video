@@ -7,8 +7,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  Button
+  View
 } from 'react-native';
 
 import Video from 'react-native-video';

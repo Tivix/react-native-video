@@ -8,8 +8,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  Button
+  View
 } from 'react-native';
 
 import Video, { FilterType } from 'react-native-video';
