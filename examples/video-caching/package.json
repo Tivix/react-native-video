@@ -3,20 +3,26 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
   },
   "dependencies": {
-    "react": "16.4.1",
-    "react-native": "0.56.0",
+    "react": "16.13.1",
+    "react-native": "0.63.4",
     "react-native-video": "file:../.."
   },
   "devDependencies": {
-    "babel-jest": "22.4.1",
-    "babel-preset-react-native": "5.0.2",
-    "express": "^4.16.2",
-    "jest": "22.4.2",
-    "react-test-renderer": "16.2.0"
+    "@babel/core": "^7.13.8",
+    "@babel/runtime": "^7.13.8",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.21.0",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "^0.65.1",
+    "react-test-renderer": "16.13.1"
   },
   "jest": {
     "preset": "react-native"

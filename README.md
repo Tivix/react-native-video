@@ -1296,6 +1296,8 @@ To enable audio to play in background on iOS the audio session needs to be set t
 
 - [Lumpen Radio](https://github.com/jhabdas/lumpen-radio) contains another example integration using local files and full screen background video.
 
+## Tests
+- E2E test are in the [basic](examples/basic) example for this library. 
 ## Updating
 
 ### Version 5.0.0
