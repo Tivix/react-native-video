@@ -7,13 +7,20 @@
     "postinstall": "rm -rf node_modules/react-native-video/{examples,node_modules}",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "test:unit": "jest --testMatch=\"**/__tests__/**/!(*e2e.js)\"",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "build:android": "adb uninstall com.videoplayer && react-native run-android --variant=release",
+    "build:ios": "xcodebuild -workspace ios/VideoPlayer.xcworkspace -configuration Debug -scheme VideoPlayer  -destination 'platform=iOS Simulator,name=iPhone 11' -derivedDataPath \"./ios/build\"",
+    "appium": "appium",
+    "test:e2e": "jest --testMatch=\"**/__tests__/**/*e2e.js\""
   },
   "dependencies": {
+    "appium": "^1.20.2",
+    "appium-doctor": "^1.16.0",
     "react": "16.13.1",
     "react-native": "0.63.4",
-    "react-native-video": "file:../.."
+    "react-native-video": "file:../..",
+    "wd": "^1.14.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
